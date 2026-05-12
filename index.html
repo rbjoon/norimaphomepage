@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>노리맵 — 우리 동네 놀이터 지도</title>
+  <meta name="description" content="우리 동네 놀이터를 한눈에! 안전검사 정보, 물놀이, 바닥재까지 확인하세요.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green: #2EB872;
+      --green-dark: #239958;
+      --yellow: #F6B93B;
+      --bg: #F8F9FA;
+      --text: #1F2933;
+      --text-sub: #6C7682;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', '맑은 고딕', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #eee;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    .nav-logo .logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .nav-logo .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-sub);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+
+    /* HERO */
+    .hero {
+      padding: 120px 24px 80px;
+      text-align: center;
+      background: linear-gradient(160deg, #f0fdf7 0%, #fff 60%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(46,184,114,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(46,184,114,0.12);
+      color: var(--green);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 span { color: var(--green); }
+
+    .hero p {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-sub);
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(46,184,114,0.35);
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(46,184,114,0.4);
+    }
+
+    .btn-secondary {
+      background: var(--text);
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background: #333;
+      transform: translateY(-1px);
+    }
+
+    .hero-mockup {
+      margin: 60px auto 0;
+      max-width: 320px;
+      position: relative;
+    }
+
+    .phone-frame {
+      background: #1a1a1a;
+      border-radius: 40px;
+      padding: 12px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+    }
+
+    .phone-screen {
+      background: var(--bg);
+      border-radius: 30px;
+      height: 580px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .screen-map {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .screen-map::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    .map-markers {
+      position: absolute;
+      inset: 0;
+    }
+
+    .marker {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .marker.green { background: var(--green); }
+    .marker.yellow { background: var(--yellow); }
+
+    .marker span {
+      transform: rotate(45deg);
+      font-size: 14px;
+    }
+
+    .screen-overlay-top {
+      position: absolute;
+      top: 16px;
+      left: 12px;
+      right: 12px;
+      background: white;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    .screen-chips {
+      position: absolute;
+      top: 72px;
+      right: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .chip {
+      background: white;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .chip.temp { color: #e65100; }
+    .chip.dust { color: var(--green); }
+
+    .screen-bottom-sheet {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 20px 20px 0 0;
+      padding: 16px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    }
+
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: #ddd;
+      border-radius: 2px;
+      margin: 0 auto 12px;
+    }
+
+    .sheet-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .sheet-addr {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .sheet-tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .sheet-tag {
+      background: var(--bg);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 10px;
+      color: var(--text-sub);
+    }
+
+    .sheet-tag.pass {
+      background: rgba(46,184,114,0.12);
+      color: var(--green);
+    }
+
+    /* FEATURES */
+    .section {
+      padding: 80px 24px;
+    }
+
+    .section-alt { background: var(--bg); }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-header p {
+      font-size: 16px;
+      color: var(--text-sub);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .icon-green { background: rgba(46,184,114,0.12); }
+    .icon-yellow { background: rgba(246,185,59,0.15); }
+    .icon-blue { background: rgba(33,150,243,0.1); }
+    .icon-red { background: rgba(229,80,57,0.1); }
+    .icon-purple { background: rgba(156,39,176,0.1); }
+    .icon-teal { background: rgba(0,150,136,0.1); }
+
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.7;
+    }
+
+    /* FILTER SECTION */
+    .filter-showcase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .filter-showcase { grid-template-columns: 1fr; }
+      .filter-showcase .filter-visual { order: -1; }
+    }
+
+    .filter-text h2 {
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .filter-text p {
+      font-size: 15px;
+      color: var(--text-sub);
+      margin-bottom: 28px;
+      line-height: 1.8;
+    }
+
+    .filter-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .filter-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+    }
+
+    .filter-item-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+    }
+
+    .filter-visual {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+
+    .filter-chips-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .filter-chip-demo {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .filter-chip-demo.active {
+      background: var(--green);
+      color: white;
+    }
+
+    .filter-chip-demo.inactive {
+      background: var(--bg);
+      color: var(--text-sub);
+    }
+
+    .filter-chip-demo.yellow-active {
+      background: var(--yellow);
+      color: white;
+    }
+
+    .filter-result {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 13px;
+      color: var(--text-sub);
+      text-align: center;
+    }
+
+    .filter-result strong {
+      color: var(--green);
+      font-size: 20px;
+      display: block;
+      font-weight: 800;
+    }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 40px 24px;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+
+    .stat-number {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 15px;
+      color: var(--text-sub);
+      font-weight: 500;
+    }
+
+    /* DOWNLOAD */
+    .download-section {
+      background: linear-gradient(135deg, var(--green) 0%, #1a9e5f 100%);
+      padding: 80px 24px;
+      text-align: center;
+      color: white;
+    }
+
+    .download-section h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .download-section p {
+      font-size: 16px;
+      opacity: 0.85;
+      margin-bottom: 40px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .store-btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.5);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
+    }
+
+    .store-btn:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
+
+    .store-btn svg { width: 24px; height: 24px; fill: white; }
+
+    /* FOOTER */
+    footer {
+      background: #111;
+      color: #aaa;
+      padding: 48px 24px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 2;
+    }
+
+    footer .footer-logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 16px;
+    }
+
+    footer .footer-links {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    footer .footer-links a {
+      color: #aaa;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer .footer-links a:hover { color: var(--green); }
+
+    footer .footer-copy {
+      color: #555;
+      font-size: 12px;
+    }
+
+    /* RESPONSIVE NAV */
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="logo-icon"><img src="images/norimap_main.png" alt="노리맵 로고"></div>
+      노리맵
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">주요 기능</a></li>
+      <li><a href="#filter">스마트 필터</a></li>
+      <li><a href="#download">다운로드</a></li>
+      <li><a href="privacy_policy.html">개인정보처리방침</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge" style="display:flex;align-items:center;gap:8px;">
+      <img src="images/norimap_main.png" alt="" style="width:20px;height:20px;border-radius:5px;">
+      우리 동네 놀이터 탐색 앱
+    </div>
+    <h1>아이와 함께할<br><span>놀이터</span>를 찾아요</h1>
+    <p>전국 놀이터를 지도에서 한눈에. 안전검사 합격 여부, 물놀이 시설, 바닥재 종류까지 바로 확인하세요.</p>
+    <div class="btn-group">
+      <a href="#download" class="btn btn-primary">
+        무료 다운로드
+      </a>
+      <a href="#features" class="btn btn-secondary">
+        기능 살펴보기
+      </a>
+    </div>
+
+    <!-- 폰 목업 -->
+    <div class="hero-mockup">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="screen-map">
+            <div class="map-markers">
+              <div class="marker green" style="top:28%; left:32%"><span>🛝</span></div>
+              <div class="marker green" style="top:45%; left:55%"><span>🛝</span></div>
+              <div class="marker yellow" style="top:38%; left:20%"><span>🏢</span></div>
+              <div class="marker green" style="top:60%; left:68%"><span>🛝</span></div>
+              <div class="marker yellow" style="top:55%; left:40%"><span>🏢</span></div>
+            </div>
+            <div class="screen-overlay-top">
+              <span style="color:#ccc">🔍</span>
+              <span>놀이터, 주소 검색</span>
+            </div>
+            <div class="screen-chips">
+              <div class="chip temp">🌡 23°C</div>
+              <div class="chip dust">바람 좋음</div>
+            </div>
+          </div>
+          <div class="screen-bottom-sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-title">중앙공원 놀이터</div>
+            <div class="sheet-addr">서울특별시 마포구 상암동 1621</div>
+            <div class="sheet-tags">
+              <span class="sheet-tag pass">안전검사 합격</span>
+              <span class="sheet-tag">물놀이</span>
+              <span class="sheet-tag">고무바닥</span>
+              <span class="sheet-tag">실외</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">7만+</div>
+          <div class="stat-label">등록된 놀이터</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">7개</div>
+          <div class="stat-label">스마트 필터</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">실시간</div>
+          <div class="stat-label">날씨·미세먼지</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">무료</div>
+          <div class="stat-label">완전 무료 서비스</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>주요 기능</h2>
+        <p>아이와의 외출이 더 스마트해집니다</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon icon-green">🗺️</div>
+          <h3>지도 기반 탐색</h3>
+          <p>현재 위치 주변 놀이터를 지도에서 바로 확인. 공공 놀이터(초록)와 아파트 단지 놀이터(노랑)를 색상으로 구분해 표시합니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-green">✅</div>
+          <h3>안전검사 정보</h3>
+          <p>놀이기구별 안전검사 합격/불합격 여부와 최근 검사일을 확인할 수 있어 안심하고 방문할 수 있습니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-blue">🌊</div>
+          <h3>물놀이 필터</h3>
+          <p>여름철 물놀이 시설이 있는 놀이터만 골라볼 수 있습니다. 더운 날 아이와 함께할 최적의 장소를 찾아보세요.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-yellow">☀️</div>
+          <h3>날씨·미세먼지 정보</h3>
+          <p>지도 위에서 현재 기온과 미세먼지(PM10) 등급을 바로 확인. 외출 전 상태를 앱 안에서 체크하세요.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-red">❤️</div>
+          <h3>즐겨찾기</h3>
+          <p>자주 가는 놀이터를 즐겨찾기에 저장. 최근 추가순·자주 방문순으로 정렬해 빠르게 찾아갈 수 있습니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-teal">🚻</div>
+          <h3>화장실 위치</h3>
+          <p>놀이터 근처 공공 화장실 위치와 남녀 칸 수, 장애인·유아용 시설 정보까지 한 번에 확인합니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-purple">🔭</div>
+          <h3>로드뷰</h3>
+          <p>놀이터 상세 화면에서 네이버 로드뷰로 실제 현장 모습을 미리 확인할 수 있습니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-green">🔍</div>
+          <h3>이름·주소 검색</h3>
+          <p>놀이터 이름이나 주소로 직접 검색. 빠른 텍스트 검색으로 원하는 놀이터를 즉시 찾아갑니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTER SHOWCASE -->
+  <section class="section section-alt" id="filter">
+    <div class="container">
+      <div class="filter-showcase">
+        <div class="filter-text">
+          <h2>원하는 조건만<br>쏙 골라보세요</h2>
+          <p>7가지 필터를 조합해 딱 맞는 놀이터를 찾아보세요. 필터를 적용하면 지도 위 마커가 실시간으로 업데이트됩니다.</p>
+          <ul class="filter-list">
+            <li class="filter-item">
+              <div class="filter-item-dot"></div>
+              공원 내 공공 놀이터만 보기
+            </li>
+            <li class="filter-item">
+              <div class="filter-item-dot"></div>
+              물놀이 시설 있는 곳만
+            </li>
+            <li class="filter-item">
+              <div class="filter-item-dot"></div>
+              안전검사 합격 놀이터만
+            </li>
+            <li class="filter-item">
+              <div class="filter-item-dot"></div>
+              바닥재 선택 (모래 / 고무 / 코팅)
+            </li>
+            <li class="filter-item">
+              <div class="filter-item-dot"></div>
+              실내 / 실외 구분
+            </li>
+            <li class="filter-item">
+              <div class="filter-item-dot"></div>
+              탐색 반경 설정 (500m ~ 2km)
+            </li>
+          </ul>
+        </div>
+        <div class="filter-visual">
+          <div class="filter-chips-demo">
+            <span class="filter-chip-demo active">공원만</span>
+            <span class="filter-chip-demo yellow-active">물놀이</span>
+            <span class="filter-chip-demo active">안전검사 합격</span>
+            <span class="filter-chip-demo inactive">실내</span>
+            <span class="filter-chip-demo inactive">모래바닥</span>
+            <span class="filter-chip-demo inactive">고무바닥</span>
+          </div>
+          <div class="filter-result">
+            조건에 맞는 놀이터
+            <strong>23개</strong>
+            반경 1km 이내
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section class="download-section" id="download">
+    <h2>지금 바로 시작하세요</h2>
+    <p>노리맵은 무료입니다. 광고 없이 모든 기능을 자유롭게 사용하세요.</p>
+    <div class="store-btns">
+      <a href="https://play.google.com/store/apps/details?id=com.arin.norimap" class="store-btn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 20.5v-17c0-.83 1-.83 1.5-.5l14 8.5c.5.3.5 1.2 0 1.5L4.5 21c-.5.33-1.5.33-1.5-.5zM5 6.17V17.83L15.92 12 5 6.17z"/>
+        </svg>
+        Google Play
+      </a>
+      <a href="https://apps.apple.com/app/id6738671530" class="store-btn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+        </svg>
+        App Store
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">노리맵</div>
+    <div class="footer-links">
+      <a href="privacy_policy.html">개인정보처리방침</a>
+      <a href="terms_of_service.html">이용약관</a>
+      <a href="mailto:coderabbitapp@gmail.com">문의하기</a>
+    </div>
+    <div class="footer-copy">
+      코드래빗 | 대표 이현준 | 사업자등록번호 740-69-00653<br>
+      coderabbitapp@gmail.com<br>
+      © 2025 코드래빗. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>
