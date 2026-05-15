@@ -654,7 +654,7 @@
       우리 동네 놀이터 탐색 앱
     </div>
     <h1>아이와 함께할<br><span>놀이터</span>를 찾아요</h1>
-    <p>전국 놀이터를 지도에서 한눈에. 안전검사 합격 여부, 물놀이 시설, 바닥재 종류까지 바로 확인하세요.</p>
+    <p>전국 놀이터를 지도에서 한눈에. 바닥재·물놀이·실내외 필터로 딱 맞는 놀이터를 찾고, 상세 정보에서 안전검사 결과까지 확인하세요.</p>
     <div class="btn-group">
       <a href="#download" class="btn btn-primary">
         무료 다운로드
@@ -739,14 +739,9 @@
           <p>현재 위치 주변 놀이터를 지도에서 바로 확인. 공공 놀이터(초록)와 아파트 단지 놀이터(노랑)를 색상으로 구분해 표시합니다.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon icon-green">✅</div>
-          <h3>안전검사 정보</h3>
-          <p>놀이기구별 안전검사 합격/불합격 여부와 최근 검사일을 확인할 수 있어 안심하고 방문할 수 있습니다.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon icon-blue">🌊</div>
-          <h3>물놀이 필터</h3>
-          <p>여름철 물놀이 시설이 있는 놀이터만 골라볼 수 있습니다. 더운 날 아이와 함께할 최적의 장소를 찾아보세요.</p>
+          <div class="feature-icon icon-green">📋</div>
+          <h3>놀이터 상세 정보</h3>
+          <p>놀이터를 탭하면 시설명, 주소, 놀이기구별 안전검사 결과, 바닥재 종류, 물놀이·실내 여부를 상세하게 확인할 수 있습니다.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon icon-yellow">☀️</div>
@@ -783,46 +778,63 @@
       <div class="filter-showcase">
         <div class="filter-text">
           <h2>원하는 조건만<br>쏙 골라보세요</h2>
-          <p>7가지 필터를 조합해 딱 맞는 놀이터를 찾아보세요. 필터를 적용하면 지도 위 마커가 실시간으로 업데이트됩니다.</p>
+          <p>4가지 필터를 조합해 딱 맞는 놀이터를 찾아보세요. 필터를 적용하면 지도 위 마커가 실시간으로 업데이트됩니다.</p>
           <ul class="filter-list">
             <li class="filter-item">
               <div class="filter-item-dot"></div>
-              공원 내 공공 놀이터만 보기
+              유형: 전체 / 실내 / 실외
             </li>
             <li class="filter-item">
               <div class="filter-item-dot"></div>
-              물놀이 시설 있는 곳만
+              바닥재: 모래 / 고무 / 포설도포 / 기타
             </li>
             <li class="filter-item">
               <div class="filter-item-dot"></div>
-              안전검사 합격 놀이터만
+              시설: 물놀이 / 공원 / 화장실
             </li>
             <li class="filter-item">
               <div class="filter-item-dot"></div>
-              바닥재 선택 (모래 / 고무 / 코팅)
-            </li>
-            <li class="filter-item">
-              <div class="filter-item-dot"></div>
-              실내 / 실외 구분
-            </li>
-            <li class="filter-item">
-              <div class="filter-item-dot"></div>
-              탐색 반경 설정 (500m ~ 2km)
+              반경: 500m / 1km / 2km
             </li>
           </ul>
         </div>
         <div class="filter-visual">
-          <div class="filter-chips-demo">
-            <span class="filter-chip-demo active">공원만</span>
-            <span class="filter-chip-demo yellow-active">물놀이</span>
-            <span class="filter-chip-demo active">안전검사 합격</span>
-            <span class="filter-chip-demo inactive">실내</span>
-            <span class="filter-chip-demo inactive">모래바닥</span>
-            <span class="filter-chip-demo inactive">고무바닥</span>
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;color:var(--text-sub);font-weight:600;margin-bottom:6px;">유형</div>
+            <div class="filter-chips-demo">
+              <span class="filter-chip-demo active">전체</span>
+              <span class="filter-chip-demo inactive">실내</span>
+              <span class="filter-chip-demo inactive">실외</span>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;color:var(--text-sub);font-weight:600;margin-bottom:6px;">바닥재</div>
+            <div class="filter-chips-demo">
+              <span class="filter-chip-demo yellow-active">모래</span>
+              <span class="filter-chip-demo inactive">고무</span>
+              <span class="filter-chip-demo inactive">포설도포</span>
+              <span class="filter-chip-demo inactive">기타</span>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;color:var(--text-sub);font-weight:600;margin-bottom:6px;">시설</div>
+            <div class="filter-chips-demo">
+              <span class="filter-chip-demo active">물놀이</span>
+              <span class="filter-chip-demo inactive">공원</span>
+              <span class="filter-chip-demo inactive">화장실</span>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;color:var(--text-sub);font-weight:600;margin-bottom:6px;">반경</div>
+            <div class="filter-chips-demo">
+              <span class="filter-chip-demo inactive">500m</span>
+              <span class="filter-chip-demo active">1km</span>
+              <span class="filter-chip-demo inactive">2km</span>
+            </div>
           </div>
           <div class="filter-result">
             조건에 맞는 놀이터
-            <strong>23개</strong>
+            <strong>12개</strong>
             반경 1km 이내
           </div>
         </div>

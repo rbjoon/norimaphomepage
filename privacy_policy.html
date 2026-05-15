@@ -16,75 +16,24 @@
       max-width: 720px;
       margin: 0 auto;
     }
-    h1 {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .meta {
-      font-size: 12px;
-      color: #6C7682;
-      margin-bottom: 28px;
-    }
-    .intro {
-      color: #6C7682;
-      margin-bottom: 28px;
-      padding: 16px;
-      background: #F8F9FA;
-      border-radius: 10px;
-    }
-    h2 {
-      font-size: 15px;
-      font-weight: 700;
-      margin-top: 32px;
-      margin-bottom: 10px;
-      padding-left: 10px;
-      border-left: 3px solid #2EB872;
-    }
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .meta { font-size: 12px; color: #6C7682; margin-bottom: 28px; }
+    .intro { color: #6C7682; margin-bottom: 28px; padding: 16px; background: #F8F9FA; border-radius: 10px; }
+    h2 { font-size: 15px; font-weight: 700; margin-top: 32px; margin-bottom: 10px; padding-left: 10px; border-left: 3px solid #2EB872; }
     p { margin-bottom: 10px; }
-    ul, ol {
-      padding-left: 20px;
-      margin-bottom: 10px;
-    }
+    ul, ol { padding-left: 20px; margin-bottom: 10px; }
     li { margin-bottom: 4px; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0;
-      font-size: 13px;
-    }
-    th {
-      background: #F8F9FA;
-      padding: 9px 12px;
-      text-align: left;
-      border: 1px solid #E4E7EC;
-      font-weight: 600;
-    }
-    td {
-      padding: 9px 12px;
-      border: 1px solid #E4E7EC;
-      vertical-align: top;
-    }
-    .highlight {
-      background: #F0FBF5;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin: 10px 0;
-      font-size: 13px;
-      color: #1a6640;
-    }
-    footer {
-      margin-top: 48px;
-      font-size: 12px;
-      color: #6C7682;
-      text-align: center;
-    }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+    th { background: #F8F9FA; padding: 9px 12px; text-align: left; border: 1px solid #E4E7EC; font-weight: 600; }
+    td { padding: 9px 12px; border: 1px solid #E4E7EC; vertical-align: top; }
+    .highlight { background: #F0FBF5; border-radius: 8px; padding: 12px 16px; margin: 10px 0; font-size: 13px; color: #1a6640; }
+    footer { margin-top: 48px; font-size: 12px; color: #6C7682; text-align: center; }
   </style>
 </head>
 <body>
 
   <h1>개인정보처리방침</h1>
-  <p class="meta">시행일: 2025년 5월 1일 &nbsp;|&nbsp; 서비스명: 노리맵</p>
+  <p class="meta">시행일: 2026년 5월 15일 &nbsp;|&nbsp; 서비스명: 노리맵</p>
 
   <div class="intro">
     노리맵(이하 "앱")은 이용자의 개인정보를 소중히 여기며,
@@ -95,25 +44,26 @@
   <h2>1. 수집하는 정보</h2>
   <table>
     <thead>
-      <tr>
-        <th>항목</th>
-        <th>목적</th>
-        <th>수집 방법</th>
-        <th>보유 기간</th>
-      </tr>
+      <tr><th>항목</th><th>목적</th><th>수집 방법</th><th>보유 기간</th></tr>
     </thead>
     <tbody>
       <tr>
         <td>위치 정보<br>(위도·경도)</td>
         <td>주변 놀이터·화장실 검색, 거리 표시</td>
         <td>기기 GPS<br>(이용자 권한 허용 시)</td>
-        <td>서버 저장 없음<br>(요청 시 일시 사용 후 즉시 폐기)</td>
+        <td>서버 저장 없음<br>(요청 처리 후 즉시 폐기)</td>
       </tr>
       <tr>
         <td>즐겨찾기 데이터</td>
         <td>즐겨찾기 저장</td>
         <td>이용자 직접 저장</td>
         <td>기기 내부 저장<br>(앱 삭제 시 자동 파기)</td>
+      </tr>
+      <tr>
+        <td>문의·신고 내용</td>
+        <td>이용자 문의 및 데이터 오류 신고 처리</td>
+        <td>이용자 직접 입력</td>
+        <td>접수일로부터 1년 후 파기</td>
       </tr>
     </tbody>
   </table>
@@ -123,7 +73,6 @@
     <li>이름, 이메일, 전화번호 등 식별 정보</li>
     <li>회원가입·로그인 정보</li>
     <li>결제 정보</li>
-    <li>기기 고유 식별자 (광고 ID 포함)</li>
     <li>검색 기록</li>
   </ul>
 
@@ -131,22 +80,23 @@
   <p>앱은 아래 외부 서비스를 이용하며, 각 서비스의 개인정보처리방침이 적용됩니다.</p>
   <table>
     <thead>
-      <tr>
-        <th>서비스</th>
-        <th>용도</th>
-        <th>전송 데이터</th>
-      </tr>
+      <tr><th>서비스</th><th>용도</th><th>전송 데이터</th></tr>
     </thead>
     <tbody>
       <tr>
         <td>Supabase</td>
-        <td>놀이터·화장실 공공데이터 조회</td>
-        <td>지도 중심 좌표(위경도)만 전송<br>개인 식별 정보 없음</td>
+        <td>놀이터·화장실 공공데이터 조회, 문의·신고 저장</td>
+        <td>지도 중심 좌표(위경도), 문의·신고 내용</td>
       </tr>
       <tr>
-        <td>네이버 지도 API</td>
+        <td>카카오맵 SDK</td>
         <td>지도 표시, 길찾기 연동</td>
-        <td>네이버 개인정보처리방침 적용</td>
+        <td>카카오 개인정보처리방침 적용</td>
+      </tr>
+      <tr>
+        <td>Google AdMob</td>
+        <td>광고 표시</td>
+        <td>광고 식별자(IDFA/GAID), 기기 정보<br>Google 개인정보처리방침 적용</td>
       </tr>
     </tbody>
   </table>
@@ -161,33 +111,45 @@
   </div>
 
   <h2>5. 개인정보의 보유 및 파기</h2>
-  <p>
-    앱이 저장하는 즐겨찾기 데이터는 기기 내부에만 저장되며,
-    앱 삭제 시 자동으로 파기됩니다. 서버에 개인정보를 보유하지 않습니다.
-  </p>
+  <ul>
+    <li>즐겨찾기 데이터: 기기 내부 저장, 앱 삭제 시 자동 파기</li>
+    <li>문의·신고 내용: 접수일로부터 1년 후 파기</li>
+    <li>위치 정보: 서버에 저장하지 않음</li>
+  </ul>
 
   <h2>6. 이용자의 권리</h2>
   <ul>
     <li>기기 설정에서 언제든지 위치 권한을 철회할 수 있습니다.</li>
     <li>앱을 삭제하면 저장된 즐겨찾기 데이터가 모두 삭제됩니다.</li>
+    <li>문의·신고 내용의 열람·삭제 요청은 아래 개인정보 보호책임자에게 연락해 주세요.</li>
   </ul>
 
   <h2>7. 아동 개인정보 보호</h2>
   <p>
     앱은 만 14세 미만 아동으로부터 개인정보를 의도적으로 수집하지 않습니다.
+    만 14세 미만 아동이 개인정보를 제공한 사실이 확인되는 경우 즉시 삭제합니다.
   </p>
 
-  <h2>8. 개인정보처리방침 변경</h2>
+  <h2>8. 개인정보 보호책임자</h2>
+  <table>
+    <tbody>
+      <tr><td><strong>상호</strong></td><td>코드래빗</td></tr>
+      <tr><td><strong>대표자</strong></td><td>이현준</td></tr>
+      <tr><td><strong>이메일</strong></td><td>coderabbitapp@gmail.com</td></tr>
+    </tbody>
+  </table>
+
+  <h2>9. 개인정보처리방침 변경</h2>
   <p>
     본 방침이 변경될 경우, 앱 업데이트 또는 공지를 통해 사전 안내합니다.
     변경 이후에도 앱을 계속 이용하면 변경된 방침에 동의한 것으로 간주됩니다.
   </p>
 
-  <h2>9. 문의</h2>
-  <p>개인정보 관련 문의는 앱 내 <strong>[설정 → 문의 / 피드백]</strong>을 이용해 주세요.</p>
+  <h2>10. 문의</h2>
+  <p>개인정보 관련 문의는 앱 내 <strong>[설정 → 문의 / 피드백]</strong> 또는 이메일(coderabbitapp@gmail.com)을 이용해 주세요.</p>
 
   <footer>
-    &copy; 2025 노리맵. All rights reserved.
+    &copy; 2026 코드래빗. All rights reserved.
   </footer>
 
 </body>
